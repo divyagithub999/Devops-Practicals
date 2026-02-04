@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+    stages{
+        environment{
+            dockerImage = 'myapp-${BUILD_NUMBER}'
+        }
+        stage('docker-image-build'){
+            steps{
+                sh 'docker build -t $dockerImage .'
+                }
+            }
+        }
+        stage('docker-image-push'){
+            steps{
+                sh 'docker push $dockerImage'
+            }
+        }
+stage('k8s-deploy'){
+    steps{
+        sh 'kubectl apply -f k8s-deployment.yaml'
+    }
+}
+    }
